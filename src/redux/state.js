@@ -1,10 +1,18 @@
+
+const ADD_POST ='ADD-POST'
+const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
+
+const ADD_MESSAGES ='ADD-MESSAGES'
+const UPDATE_NEW_MESSAGES_TEXT = 'UPDATE-NEW-MESSAGES-TEXT';
+
+
+
 let store = {
     _state: {
         profilePage: {
             posts: [
                 {id: 1, messages: 'hi how are you?', likesCount: 12},
                 {id: 2, messages: 'hi how', likesCount: 11},
-
             ],
             newPostText: 'hi'
 
@@ -32,86 +40,63 @@ let store = {
             ]
         }
     },
+    _callSubscriber() {
+        console.log('state  changed')
+    },
+
     getState() {
 
         return this._state
     },
-    _callSubscriber() {
-        console.log('state  changed')
-    },
-    addPost() {
-        let newPost = {
-            id: 3,
-            message: this._state.profilePage.newPostText,
-            likesCount: 0
-        }
-
-        this._state.profilePage.posts.push(newPost)
-        this._state.profilePage.newPostText = ''
-        this._callSubscriber(this._state)
-    },
-    updateNewPostText(newText) {
-        this._state.profilePage.newPostText = newText
-        this._callSubscriber(this._state)
-    },
-    addMessages() {
-
-        let newMassages = {
-            id: 4,
-            messages: this._state.dialogsPage.newMessagesText
-        }
-        this._state.dialogsPage.messages.push(newMassages)
-        this._state.dialogsPage.newMessagesText = ''
-        this._callSubscriber(this._state)
-
-    },
-    updateNewMessagesText(newText) {
-        this._state.dialogsPage.newMessagesText = newText
-        this._callSubscriber(this._state)
-    },
     subscribe(observer) {
         this._callSubscriber = observer
+    },
+
+    dispatch(action) { //{type:'ADD-POST'}
+        if (action.type === ADD_POST) {
+            let newPost = {
+                id: 3,
+                message: this._state.profilePage.newPostText,
+                likesCount: 0
+            }
+            this._state.profilePage.posts.push(newPost)
+            this._state.profilePage.newPostText = ''
+            this._callSubscriber(this._state)
+
+        } else if (action.type === UPDATE_NEW_POST_TEXT) {
+            this._state.profilePage.newPostText = action.newText
+            this._callSubscriber(this._state)
+
+        }else if (action === ADD_MESSAGES){
+            let newMassages = {
+                id: 4,
+                messages: this._state.dialogsPage.newMessagesText
+            }
+            this._state.dialogsPage.messages.push(newMassages)
+            this._state.dialogsPage.newMessagesText=''
+            this._callSubscriber(this._state)
+
+        }else if (action === UPDATE_NEW_MESSAGES_TEXT){
+            this._state.dialogsPage.newMessagesText = action.newText
+            this._callSubscriber(this._state)
+        }
     }
-}
-
-
-/*export const addPost = () => {
-    let newPost = {
-        id: 3,
-        message: state.profilePage.newPostText,
-        likesCount: 0
-    }
-
-    state.profilePage.posts.push(newPost)
-    state.profilePage.newPostText = ''
-    rerenderEntireTree(state)
-}*/
-
-/*
-export const updateNewPostText = (newText) => {
-    state.profilePage.newPostText = newText
-    rerenderEntireTree(state)
-}
-
-export const addMessages = () => {
-    let newMassages = {
-        id: 4,
-        messages: state.dialogsPage.newMessagesText
-    }
-    state.dialogsPage.messages.push(newMassages)
-    state.dialogsPage.newMessagesText = ''
-    rerenderEntireTree(state)
 
 }
 
-export const updateNewMessagesText = (newText) => {
-    state.dialogsPage.newMessagesText = newText
-    rerenderEntireTree(state)
-}
 
-export const subscribe = (observer) => {
-    rerenderEntireTree = observer
-}*/
+export const addPostActionCreator=()=>({type: ADD_POST})
+export const updateNewPostTextActionCreator=(text)=>({type: UPDATE_NEW_POST_TEXT, newText:text})
+
+
+
+export const addMessagesActionCreator=()=> ({type: ADD_POST})
+
+
+export const updateNewMessagesTextActionCreator=(text)=>
+    ({type: UPDATE_NEW_POST_TEXT, newText:text})
+
+
 
 
 export default store
